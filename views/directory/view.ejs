@@ -1,0 +1,86 @@
+<%- include('../components/head') %>
+<% if (error) { %>
+    <div class="alert alert-danger" role="alert">
+        <%= error %>
+    </div>
+    <% } %>
+        <div class="main container">
+            <h1>Directory -> Contact Edit</h1>
+            <form id="editDirectory">
+                <label class="form-label" for="directoryName">Name:</label>
+                <input class="form-control" type="text" id="name" name="name" value="<%= directory.name %>" required><br><br>
+
+                <label class="form-label" for="directoryPhone">Phone:</label>
+                <input class="form-control" type="text" id="phone" name="phone" value="<%= directory.phone %>" required><br><br>
+
+                <label class="form-label" for="directoryHome">Home (โทรศัพท์บ้าน):</label>
+                <input class="form-control" type="text" id="home" value="<%= directory.home %>" name="home"><br><br>
+
+                <label class="form-label" for="directoryEmail">Email:</label>
+                <input class="form-control" type="text" id="email" name="email" value="<%= directory.email %>" required><br><br>
+
+                <label class="form-label" for="directoryAddress">Address:</label>
+                <textarea class="form-control" type="text" id="address" name="address" required><%= directory.address %></textarea><br><br>
+
+                <label class="form-label" for="directoryWebsite">Website :</label>
+                <input class="form-control" type="text" id="website" name="website" value="<%= directory.website %>" required><br><br>
+
+                <label class="fotm-label" for="directoryCompany">Company:</label>
+                <input class="form-control" type="text" id="company" name="company" value="<%= directory.company %>"><br><br>
+
+
+                <label class="form-label" for="directoryType">Type: </label>
+                <select id="type" name="type" class="form-select" aria-label="Type" required>
+                    <option value="<%= directory.type %>" selected><%= directory.type %> -- ค่าเดิม (Default Value)</option>
+                    <option value="บุคคลทั่วไป">บุคคลทั่วไป</option>
+                    <option value="บุคคลภายใน">บุคคลภายใน</option>
+                    <option value="บุคคลภายนอก">บุคคลภายนอก</option>
+                    <option value="ลูกค้า">ลูกค้า</option>
+                    <option value="ผู้ขาย">ผู้ขาย</option>
+                </select><br><br>
+
+                <label class="form-label" for="directoryNote">Note:</label>
+                <textarea class="form-control" type="text" id="note" name="note"></textarea><br><br>
+
+                <label class="form-label" for="directoryStatus">Status:</label>
+                <select id="status" name="status" class="form-select" aria-label="Status" required>
+                    <option value="<%= directory.status %>" selected><%= directory.status %> -- ค่าเดิม (Default Value)</option>
+                    <option value="ใช้งานอยู่">ใช้งานอยู่</option>
+                    <option value="เลิกใช้งานแล้ว">เลิกใช้งานแล้ว</option>
+                </select><br><br>
+
+                <div class="text-left mt-4">
+                    <button id="editContactBtn" type="submit" class="btn btn-primary btn-lg">Edit</button>
+                </div>
+            </form>
+        </div>
+        <script>
+            //get all data from form and send to server to update data use put method
+            document.getElementById('editContactBtn').addEventListener('click', function () {
+                if (document.getElementById('name').value && document.getElementById('phone').value && document.getElementById('email').value && document.getElementById('address').value && document.getElementById('website').value && document.getElementById('type').value && document.getElementById('status').value) {
+                    fetch('/directory/<%= directory.id %>', {
+                        method: 'put',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: document.getElementById('name').value,
+                            phone: document.getElementById('phone').value,
+                            home: document.getElementById('home').value,
+                            email: document.getElementById('email').value,
+                            address: document.getElementById('address').value,
+                            website: document.getElementById('website').value,
+                            company: document.getElementById('company').value,
+                            type: document.getElementById('type').value,
+                            note: document.getElementById('note').value,
+                            status: document.getElementById('status').value
+                        })
+                    }).then(res => {
+                        if (res.ok) return res.json()
+                    }).then(data => {
+                        console.log(data)
+                        window.location.href = '/directory'
+                    })
+                }
+            })
+        </script>

@@ -1,0 +1,313 @@
+<%- include('../components/head') %>
+  <div class="container">
+    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#upload">
+      Upload
+    </button>
+    <% if (user.admin == 1) { %>
+    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#categoryManagement">
+      Category Management
+    </button>
+    <% } %>
+
+    <!-- Search bar -->
+    <div id="searchbar" class="input-group mt-3">
+      <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
+      <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+    </div>
+    <!-- Document list -->
+    <h1 class="mt-2 mb-4">Document List</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Category</th>
+          <th scope="col">Mimetype</th>
+          <th scope="col">Size</th>
+          <th scope="col">Path</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let i=0; i < documents.length; i++) { %>
+          <tr>
+            <th scope="row">
+              <%= documents[i].id %>
+            </th>
+            <td>
+              <%= documents[i].title %>
+            </td>
+            <td>
+              <%= documents[i].category %>
+            </td>
+            <td>
+              <%= documents[i].mimetype %>
+            </td>
+            <td>
+              <%= documents[i].size %>
+            </td>
+            <td>
+              <%= documents[i].path %>
+            </td>
+            <td>
+              <a href="/documents/<%= documents[i].id %>" target="_blank" class="btn btn-sm btn-primary">View</a>
+              <% if (user.admin == 1) { %>
+              <a class="btn btn-sm btn-danger delete-btn-doc">Delete</a>
+              <% } %>
+            </td>
+            <td>
+
+            </td>
+          </tr>
+          <% } %>
+      </tbody>
+    </table>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="upload" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="uploadLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="uploadLabel">Documents Upload</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/documents/upload" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="title" class="form-label">Title</label>
+              <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+              <label for="file" class="form-label">File</label>
+              <input type="file" class="form-control" id="file" name="file" required>
+            </div>
+            <!--Add Category -->
+            <div class="mb-3">
+              <label for="category" class="form-label">Category</label>
+              <select class="form-select" aria-label="Default select example" name="category" id="category">
+                <% for (let i=0; i < documents.category.length; i++) { %>
+                  <option value="<%= documents.category[i].id %>"><%= documents.category[i].name %></option>
+                  <% } %>
+              </select>
+              <div class="text-center mt-4">
+                <button id="uploadbtn" type="submit" class="btn btn-primary btn-lg">Upload</button>
+              </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Modal -->
+  <div class="modal fade" id="categoryManagement" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="categoryManagementLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="categoryManagementLabel">Category Management</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Content -->
+          <h3 class="mt-2 mb-4">Category List</h3>
+          <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addCategory">
+            Add Category
+          </button>
+          <!-- Add Category -->
+
+          <!-- Make a list of category with table -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="document-t">
+              <% for (let i=0; i < documents.category.length; i++) { %>
+                <tr>
+                  <th scope="row">
+                    <%= documents.category[i].id %>
+                  </th>
+                  <td>
+                    <%= documents.category[i].name %>
+                  </td>
+                  <td>
+                    <a class="btn btn-sm btn-danger delete-btn-category">Delete</a>
+                  </td>
+                  <td>
+      
+                  </td>
+                </tr>
+                <% } %>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Modal -->
+  <div class="modal fade" id="addCategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="addCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="addCategoryLabel">Category Add</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/documents/category" method="POST">
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="text-center mt-4">
+              <button id="uploadbtn-category" type="submit" class="btn btn-primary btn-lg">Add</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    //Create sweet alert for delete button in document list page 
+    const deleteButtons = document.querySelectorAll('.delete-btn-doc');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const id = button.parentElement.parentElement.children[0].textContent;
+        const title = button.parentElement.parentElement.children[1].textContent;
+        Swal.fire({
+          title: 'Are you sure?',
+          text: `You will delete ${title} document`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            //use fetch method to delete document
+            fetch(`/documents/${id}`, {
+              method: 'DELETE'
+
+            }).then(res => {
+              if (res.status === 200) {
+                Swal.fire(
+                  {
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Your document has been deleted',
+                    showConfirmButton: false,
+                    timer: 1500
+                  }
+                ).then(() => {
+                  //Reload page after delete document
+                  window.location.reload();
+                })
+              }
+            })
+          }
+        })
+      })
+    })
+    //Create sweet alert for upload button in document list page
+    const uploadButton = document.querySelector('#uploadbtn');
+    uploadButton.addEventListener('click', () => {
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Your work has been saved',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        //Reload page after upload document
+        window.location.reload();
+      })
+    })
+
+    //create a search bar in document list page that connect with data
+    const searchBar = document.querySelector('#searchbar');
+    searchBar.addEventListener('keyup', (e) => {
+      const searchString = e.target.value.toLowerCase();
+      const documents = document.querySelectorAll('tbody tr');
+      Array.from(documents).forEach(document => {
+        const title = document.children[1].textContent;
+        if (title.toLowerCase().includes(searchString)) {
+          document.style.display = 'table-row';
+        } else {
+          document.style.display = 'none';
+        }
+      })
+    })
+
+    //Create sweet alert for delete button in category list page 
+    const deleteButtonsCategory = document.querySelectorAll('.delete-btn-category');
+    deleteButtonsCategory.forEach(button => {
+      button.addEventListener('click', () => {
+        const id = button.parentElement.parentElement.children[0].textContent;
+        const name = button.parentElement.parentElement.children[1].textContent;
+        Swal.fire({
+          title: 'Are you sure?',
+          text: `You will delete ${name} category`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            //use fetch method to delete category
+            fetch(`/documents/category/${id}`, {
+              method: 'DELETE'
+
+            }).then(res => {
+              if (res.status === 200) {
+                Swal.fire(
+                  {
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Your category has been deleted',
+                    showConfirmButton: false,
+                    timer: 1500
+                  }
+                ).then(() => {
+                  //Reload page after delete category
+                  window.location.reload();
+                })
+              }
+            })
+          }
+        })
+      })
+    })
+
+    //Create sweet alert for upload button for Category Add page
+    const uploadButtonCategory = document.querySelector('#uploadbtn-category');
+    uploadButtonCategory.addEventListener('click', () => {
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Your work has been saved',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        //Reload page after upload category
+        window.location.reload();
+      })
+    })
+
+  </script>
+  </body>
+  </html>

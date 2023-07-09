@@ -1,0 +1,88 @@
+<%- include('components/head') %>
+  <div class="main container-fluid">
+    <div class="welcome p-5">
+      <!--Change This to User name title!-->
+      <h2>Welcome Back! <%= user.username %>
+      </h2>
+      <h4 id="time_now"></h4>
+    </div>
+    <div class="stats">
+      <div class="row justify-content-center">
+        <div class="col-sm-auto col-6 my-2">
+          <div class="card p-4">
+            <h2>เอกสารทั้งหมด</h2>
+            <h3>
+              <%= Documents.length %>
+            </h3>
+          </div>
+        </div>
+        <div class="col-sm-auto col-6 my-2">
+          <div class="card p-4">
+            <h2>งานของคุณ (ยังไม่ได้รับงาน)</h2>
+            <h3>
+              <%= MyTasks.filter(task=> task.status == 'ยังไม่ได้รับงาน').length %>
+            </h3>
+          </div>
+        </div>
+        <div class="col-sm-auto col-6 my-2">
+          <div class="card p-4">
+            <h2>งานของคุณ (กำลังทำ)</h2>
+            <h3>
+              <%= MyTasks.filter(task=> task.status == 'กำลังทำ').length %>
+            </h3>
+          </div>
+        </div>
+        <div class="col-sm-auto col-6 my-2">
+          <div class="card p-4">
+            <h2>งานของคุณ (เสร็จแล้ว)</h2>
+            <h3>
+              <%= MyTasks.filter(task=> task.status == 'เสร็จแล้ว').length %>
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+  </div>
+  <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/luxon@3.2.1/build/global/luxon.min.js"></script>
+  <script>
+     var DateTime = luxon.DateTime;
+    const time_now = document.getElementById('time_now');
+    function UpdateTime() {
+      var now = DateTime.now().setLocale('th').toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS);;
+      console.log(now);
+      time_now.innerHTML = "เวลา ณ ตอนนี้ " + now;
+    }
+    setInterval(UpdateTime, 1000)
+
+    //Get Position of user and save in variable
+    async function getWeather() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&hourly=temperature_2m`, {
+            method: 'get'
+          }).then(res => {
+            if (res.ok) return res.json()
+          }).then(data => {
+            console.log(data)
+
+          })
+        })
+      } else {
+        return false;
+      }
+    }
+
+    let data;
+
+
+    getWeather();
+
+
+    //Show Position of user
+
+  </script>
+  </body>
+
+  </html>

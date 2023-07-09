@@ -1,0 +1,166 @@
+<%- include('../components/head') %>
+    <% if (error) { %>
+        <div class="alert alert-danger" role="alert">
+            <%= error %>
+        </div>
+    <% } %>
+    <div class="main container">
+        <h1>Task</h1>
+        <button id="addTaskBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+            Add Task
+        </button>
+        <div class="task-content mt-5">
+            <h2>My Task</h2>
+            <div class="row">
+                <% for (let i = 0; i < MyTasks.length; i++) { %>
+                    <div class="col-3 mt-3">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h5><%= MyTasks[i].name %></h5>
+                            <h5><span class="badge bg-secondary"><%= MyTasks[i].status %></span></h5>
+                        </div>
+                        <div class="card-body">
+                            
+                            <div class="card-text">
+                                <p><%= MyTasks[i].content %></p>
+                                </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <a href="/tasks/<%= MyTasks[i].id %>" class="btn btn-primary">View</a>
+                                </div>
+                                
+                                <div>
+                                        <button data-id="<%= MyTasks[i].id %>" type="submit" class="btn btn-danger">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <% } %>
+            </div>
+            <div class="spacer"></div>
+            <div class="task-content mt-3">
+                <h2>All Task</h2>
+                <div class="row">
+                    <% for (let i = 0; i < tasks.length; i++) { %>
+                        <div class="col-3 mt-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between">
+                                <h4><%= tasks[i].name %></h4>
+                                <h5><span class="badge bg-primary"><%= tasks[i].status %></span></h5>
+                                </div>
+                                <h5><span class="badge bg-success">จาก : <%= tasks[i].created_user_name %></span></h5>
+                            </div>
+                            <div class="card-body">
+                                
+                                <div class="card-text">
+                                    <p><%= tasks[i].content %></p>
+                                    </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <span class="badge bg-secondary"><%= tasks[i].assigned_user_name %></span>
+                                    </div>
+                                    <!-- <div>
+                                        <a href="/tasks/<%= tasks[i].id %>" class="btn btn-primary">View</a>
+                                    </div>
+                                    
+                                    <div>
+                                            <button data-id="<%= tasks[i].id %>" type="submit" class="btn btn-danger">Delete</button>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <% } %>
+                </div>
+        </div>
+        
+
+        <!-- Add Task Modal -->
+        <div class="modal fade" id="addTaskModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="addTaskModalLabel">Add Task</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/tasks" method="POST" id="addTaskForm">
+                        <label class="form-label" for="taskName">Task Name:</label>
+                        <input class="form-control" type="text" id="name" name="name" required><br><br>
+                      
+                        <label class="form-label" for="assignedUser">Assign to User ID:</label>
+                        <select id="assignedUser" name="assign_user" class="form-select" aria-label="Assign To User" required>
+                            <option value="">Open this select menu</option>
+                          </select>
+                      
+                        <label class="form-label" for="taskImage">Task Image:</label>
+                        <input class="form-control" type="file" id="taskImage" name="taskImage"><br>
+
+                        <label class="form-label" for="status">Status :</label>
+                        <select id="status" name="status" class="form-select" aria-label="Status" required>
+                            <option value="" selected>Open this select menu</option>
+                            <option value="ยังไม่ได้รับงาน">ยังไม่ได้รับงาน</option>
+                            <option value="กำลังทำ">กำลังทำ</option>
+                            <option value="เสร็จแล้ว">เสร็จแล้ว</option>
+                          </select>
+                      
+                        <label class="form-label" for="taskDescription">Task Description:</label><br>
+                        <textarea class="form-control" id="taskDescription" name="desc" rows="4" cols="50" required></textarea><br><br>
+                      
+                        <div class="text-center mt-4">
+                            <button id="addTaskBtn" type="submit" class="btn btn-primary btn-lg">Add Task</button>
+                          </div>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+<script>
+    //if Add Task Button is clicked query user data from api and display in modal
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const userSelect = document.getElementById('assignedUser');
+    addTaskBtn.addEventListener('click', () => {
+        //fetch user data from api
+        fetch('/api/users')
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                for (let i = 0; i < data.length; i++) {
+                    const option = document.createElement('option');
+                    option.value = data[i].id;
+                    option.innerText = data[i].username + ' - ' + data[i].role;
+                    userSelect.appendChild(option);
+                }
+            })
+            .catch(err => console.log(err));
+            
+    });
+
+    //if CLick Delete Button
+    const deleteBtn = document.querySelectorAll('.btn-danger');
+    deleteBtn.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            console.log(id);
+            fetch('/tasks/' + id, {
+                method: 'DELETE'
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                window.location.reload();
+            })
+            .catch(err => console.log(err));
+        });
+    });
+</script>
