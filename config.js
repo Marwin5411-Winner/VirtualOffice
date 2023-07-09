@@ -8,7 +8,7 @@ module.exports = {
         database: process.env.DB_NAME || 'v_office',
     },
     WEB: {
-        name: 'Virtual Office'
+        name: 'Virtual Office',
     },
     PORT: process.env.PORT || 3000,
 };
