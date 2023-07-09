@@ -2,13 +2,13 @@ module.exports = {
     JWTtoken: 'vitual_office',
     hashToken: 'cJNDDEVJGm',
     db: {
-        host: 'localhost',
-        user: 'root',
-        pass: 'root',
-        database: 'v_office'
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        pass: process.env.DB_PASS || 'root',
+        database: process.env.DB_NAME || 'v_office',
     },
     WEB: {
         name: 'Virtual Office'
     },
-    PORT: 3000
+    PORT: process.env.PORT || 3000,
 };
