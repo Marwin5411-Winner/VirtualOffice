@@ -17,4 +17,4 @@ COPY . .
 EXPOSE $PORT
 
 # Start the Node.js application
-CMD ["npm", "run pro"]
+CMD ["node", "./bin/www"]

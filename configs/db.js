@@ -4,6 +4,7 @@ const pool = mysql.createPool({
     user: global.config.db.user,
     password: global.config.db.pass,
     database: global.config.db.database,
+    port: global.config.db.port,
     waitForConnections: true,
     maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
     idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000

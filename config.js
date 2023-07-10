@@ -6,6 +6,7 @@ module.exports = {
         user: process.env.DB_USER || 'root',
         pass: process.env.DB_PASS || 'root',
         database: process.env.DB_NAME || 'v_office',
+        port: process.env.DB_PORT || 3306,
     },
     WEB: {
         name: 'Virtual Office',
