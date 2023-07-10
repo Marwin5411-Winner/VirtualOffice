@@ -21,7 +21,8 @@ passport.use(
           return cb(null, user, { message: "Logged In Successfully" });
         })
       .catch((err) => {
-        return cb(null, false, { message: "Incorrect username or password." });
+        console.log(err)
+        return cb(null, false, { message: "Error : " + err  });
       });
     }
   )

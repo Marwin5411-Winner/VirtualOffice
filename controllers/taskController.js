@@ -9,7 +9,7 @@ exports.getTasks = async (req, res) => {
 
 exports.getTask = async (req, res) => {
     const task = await taskModel.getTask(req.params.id);
-    res.render('task/task', { task, title: global.config.WEB.nam, user: req.user });
+    res.render('task/task', { task, title: global.config.WEB.name, user: req.user });
 }
 
 

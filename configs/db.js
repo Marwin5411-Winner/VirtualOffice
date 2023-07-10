@@ -12,5 +12,13 @@ const pool = mysql.createPool({
   }).promise();
 
 
+  pool.on('acquire', () => {
+    console.log('Connection acquired');
+  });
+
+  pool.on('release', () => {
+    console.log('Connection released');
+  });
+
 
 module.exports = { pool };
